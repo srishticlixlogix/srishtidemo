@@ -1,0 +1,91 @@
+<?php
+/**
+ * The template for displaying the footer
+ *
+ * Contains the closing of the #content div and all content after
+ *
+ * @package WordPress
+ * @subpackage Twenty_Sixteen
+ * @since Twenty Sixteen 1.0
+ */
+?>
+
+ <footer class="container-fluid">
+    <div class="container nopadding">
+        <div class="row">
+            <div class="col-sm-4">
+                <h2><?php echo get_field('about_title','options'); ?></h2>
+                <p>
+                <?php echo get_field('about_description','options'); ?>
+                   
+                </p>     
+                <div class="socialMedia">
+                    <ul class="nopadding">
+                        <?php if(get_field('instagram_link','options')): ?><li><a href="<?php echo get_field('instagram_link','options'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri();?>/images/pinterest-icon.png" alt="img" /></a></li><?php endif; ?>
+                        <?php if(get_field('facebook_link','options')): ?><li><a href="<?php echo get_field('facebook_link','options'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri();?>/images/fb-icon.png" alt="img" /></a></li><?php endif; ?>
+                        <?php if(get_field('linkedin_link','options')): ?><li><a href="<?php echo get_field('linkedin_link','options'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri();?>/images/linkedin-icon.png" alt="img" /></a></li><?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-sm-5 col-md-4 col-md-offset-1">
+                <h2 class="text-center">&nbsp;</h2>
+                <ul class="text-center nopadding">
+                    <?php if(get_field('phone','options')): ?><li class="text-left"><img src="<?php echo get_template_directory_uri();?>/images/phone-icon-white.png" />&nbsp;&nbsp; <a href="tel:<?php echo get_field('phone','options'); ?>"><?php echo get_field('phone','options'); ?></a></li><?php endif; ?>                    
+                    <?php if(get_field('email','options')): ?><li class="text-left"><img src="<?php echo get_template_directory_uri();?>/images/email-white-icon.png" />&nbsp;&nbsp; <a href="mailto:<?php echo get_field('email','options'); ?>"><?php echo get_field('email','options'); ?></a></li><?php endif; ?>                    
+                    <?php if(get_field('address','options')): ?><li class="text-left"><img src="<?php echo get_template_directory_uri();?>/images/home-white-icon.png" />&nbsp;&nbsp; <?php echo get_field('address','options'); ?> </li><?php endif; ?>
+                </ul>
+            </div>
+
+            <div class="col-sm-3">
+                <h2 class="text-right">sitemap</h2> 
+                <?php wp_nav_menu( array('menu' => 'footer menu','menu_class' => 'text-right') ); ?>    
+            </div>           
+        </div>
+        <div class="row copyright">
+            <div class="col-sm-12">
+                <?php echo get_field('copyright','options'); ?>
+            </div>          
+        </div>
+
+    </div>
+</footer>
+
+<?php wp_footer(); ?>
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri();?>/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $(".navbar-toggle").click(function () {
+            $(".navigation .navigationBar").toggleClass("active");
+        });
+        
+        $('#myAffix').affix({
+            offset: {
+                top: 100
+            }
+        });
+        
+        $('a[href*="#"]:not([href="#"])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

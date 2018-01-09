@@ -1,0 +1,300 @@
+<?php
+
+/* 
+ Template Name: Retailer
+ */
+
+get_header(); ?>
+<?php 
+$args = array( 
+            'post_type'   => 'retailerpost',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'order' => 'DESC'
+        );
+$posts = new WP_Query( $args );
+ if ( $posts->have_posts() ) :  while( $posts->have_posts() ) : $posts->the_post();
+     $countries[] = get_post_meta(get_the_id(),'country',true);
+ endwhile; endif;
+?>
+
+<div class="homePage retailerPageOnly">
+    <div class="container-fluid sliderSection nopadding">
+        <div class="sliderContent">
+            <?php $image = get_field('banner_image'); ?>
+            <img src="<?php echo get_template_directory_uri().'/images/retailer-page-top-bg.png'; ?>" alt="<?php echo $image['alt']; ?>" class="img-responsive" />
+            <div class="overLayContent">
+                <h2><?php _e('Find a retailer near you'); ?></h2>
+               
+                <p class="text-center" style="margin-bottom: 0px;"><span class="linkBtn"><input type="search" id="retailer_zipcode" placeholder="Search by zip code" ><input type="submit" id="searchretailer" value=""></span></p>
+                 <p id="alerttext" class="text-center" style="color: #ff0000;"></p>
+            </div>
+        </div>
+    </div>
+    <div class="retailerZone">
+            <ul>
+                <?php if(have_rows('retailer_info','options')): while(have_rows('retailer_info','options')): the_row(); ?>
+                    <li><a href="<?php echo get_sub_field('link','options'); ?>"><img src="<?php echo get_sub_field('image','options'); ?>" /> <span><?php echo get_sub_field('text','options'); ?></span></a></li>
+                <?php endwhile; endif; ?>    
+            </ul>
+     </div>
+
+    <div class="container-fluid margin136pxTB">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 col-xs-6 text-center">
+                    <h2 class="nomargin country"><?php _e('Sweden'); ?></h2>
+                    <p><?php _e('choose retailer'); ?></p>
+                </div>
+
+                <div class="col-sm-4 col-xs-6 text-center pull-right">
+                    <h2 class="nomargin"><?php _e('World'); ?></h2>
+                    <p><?php _e('choose land'); ?></p>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+
+
+    <div class="container-fluid productContainer nopadding retailerSection">
+        <div id="retailer-listing" class="col-sm-6 containInMiddle nopadding">
+
+            <?php 
+                $args = array( 
+                    'post_type'   => 'retailerpost',
+                    'post_status' => 'publish',
+                    'posts_per_page' => -1,
+                    'meta_value' => 'sweden',
+                    'orderby'=> 'title', 
+                    'order' => 'ASC'
+
+                );
+                $posts = new WP_Query( $args );
+                if ( $posts->have_posts() ) : 
+                ?>
+                <?php while( $posts->have_posts() ) : $posts->the_post() ?>
+                    <div class="retailerDetail">
+                        <div class="contentbox">
+                            <h4><?php the_title(); ?></h4>
+                            <p>
+                                <a href="tel:<?php echo get_field('phone_number'); ?>"><?php echo get_field('phone_number'); ?></a><br />
+                                <a href="mailto:<?php echo get_field('email_id'); ?>"><?php echo get_field('email_id'); ?></a>
+                            </p>
+                            <p class="arrowIcon"><a href="<?php the_permalink(); ?>" class="readMoreBtn" style="border:0;"></a></p>
+                        </div>
+                    </div>
+                  
+                <?php wp_reset_postdata(); endwhile;  endif; ?>
+        </div>
+
+        <div class="col-md-6 col-sm-6 imagesSection nopadding">
+            <div id="map" ></div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<?php include 'footer.php'; ?>
+
+
+
+<script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyCMtEH2rnetuGfmzSVLHmwkyTiipddoQec' type='text/javascript'></script>
+
+
+<script type="text/javascript">
+    
+jQuery(document).ready( function(){
+    $("#searchretailer").click(function () {
+            var retailer_zipcode = $("#retailer_zipcode").val();
+            if(!retailer_zipcode){
+               jQuery("#alerttext").text("Please enter zipcode first");
+            }
+            else{
+                jQuery("#alerttext").text("");
+                $.ajax({
+                type: "post",
+                url: "<?php echo get_permalink(135); ?>",
+                data: {'retailer_zipcode': retailer_zipcode},
+                success: function (data) {
+                    if (data) {
+                       jQuery("#retailer-listing").html(data);
+                      
+                    }
+                }
+            });
+            }
+            
+        });
+
+});
+
+
+</script>
+
+
+
+
+<style type="text/css">
+  
+#map_canvas {
+    width: 500px;
+    height: 500px;
+}
+
+</style>
+<
+<script type="text/javascript">
+  
+$(document).ready(function () {
+    var map;
+    var elevator;
+    var myCenter = new google.maps.LatLng(62.9748368,16.1777075);
+    var myOptions = {
+            center: myCenter,
+            zoom: 4,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,           
+            styles: [
+                    {
+                        "featureType": "administrative",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "all",
+                        "stylers": [
+                            {
+                                "color": "#828282"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "all",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "all",
+                        "stylers": [
+                            {
+                                "saturation": -100
+                            },
+                            {
+                                "lightness": 45
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "all",
+                        "stylers": [
+                            {
+                                "visibility": "simplified"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.arterial",
+                        "elementType": "labels.icon",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "all",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "all",
+                        "stylers": [
+                            {
+                                "color": "#f2f2f2"
+                            },
+                            {
+                                "visibility": "on"
+                            }
+                        ]
+                    }
+                ]
+        };
+
+    map = new google.maps.Map($('#map')[0], myOptions);
+
+    var addresses = <?php echo json_encode(array_unique($countries)); ?>;
+   
+    console.log(addresses);
+    var countries = [];
+
+    for (var prop in addresses) {
+        countries.push(addresses[prop]);
+    }
+   console.log(countries)
+    for (var x = 0; x < countries.length; x++) {
+        $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address='+countries[x]+'&sensor=false', null, function (data) {
+            var p = data.results[0].geometry.location;
+            var position = new google.maps.LatLng(p.lat, p.lng);
+            marker = new google.maps.Marker({
+                position: position,
+                map: map,
+            });
+            // Allow each marker to have an info window    
+           google.maps.event.addListener(marker, "click", function (event) {
+                var latitude = this.position.lat();
+                var longitude = this.position.lng();
+                $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=false', null, function (data) {
+                    console.log(data);
+                    var p = data.results[0].geometry.location;
+                    var country = data.results[0].address_components;
+                    console.log(country.length);
+                    for (var i = country.length - 1; i >= 0; i--) {
+                        if(country[i].types[0] == 'country'){
+                            jQuery(".nomargin.country").text(country[i].long_name);
+                            var retailer_country = country[i].long_name;
+                            $.ajax({
+                                type: "post",
+                                url: "<?php echo get_permalink(137); ?>",
+                                data: {'retailer_country': retailer_country},
+                                success: function (data) {
+                                    if (data) {
+                                        jQuery("#retailer-listing").html(data);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    
+                });
+
+            }); 
+
+
+
+        });
+    }
+    
+
+});
+
+</script>

@@ -1,0 +1,103 @@
+<?php
+
+/* 
+ Template Name: Solutions
+ */
+
+get_header(); ?>
+
+
+<div class="homePage onlyDesigners">
+    <div class="container-fluid sliderSection nopadding">
+        <div class="sliderContent">
+            <?php $image = get_field('banner_image'); ?>
+            <img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt']; ?>" class="img-responsive" />       
+        </div>        
+    </div>
+
+    <div class="retailerZone">
+        <ul>
+            <?php if(have_rows('retailer_info','options')): while(have_rows('retailer_info','options')): the_row(); ?>
+                <li><a href="<?php echo get_sub_field('link','options'); ?>"><img src="<?php echo get_sub_field('image','options'); ?>" /> <span><?php echo get_sub_field('text','options'); ?></span></a></li>
+            <?php endwhile; endif; ?>    
+        </ul>
+    </div>
+
+    <div class="container-fluid margin40pxTB">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2><?php the_title();?></h2>                    
+                </div>
+            </div>
+            <div class="row aboutusId">
+
+                <?php if( have_rows('designer_details') ): while( have_rows('designer_details') ): the_row(); ?>
+                    <div class="col-sm-3 text-center">
+                        <?php $image = get_sub_field('image'); ?>
+                        <h4><a href="#<?php echo $image['title'] ?>"><?php echo get_sub_field('name'); ?></a></h4>  
+                    </div>
+               <?php endwhile; endif; ?> 
+                
+            </div>
+        </div>
+    </div>
+
+<?php $i =0; if( have_rows('designer_details') ): while( have_rows('designer_details') ): $i++; the_row(); ?>
+  
+  <?php if($i%2 != 0 ){ ?>
+  	<?php $images = get_sub_field('image'); ?>
+    <div class="container-fluid media designers nopadding" id="<?php echo $images['title'] ?>" style="background: url(<?php echo get_sub_field('bg_image');?>)">
+        <div class="nopadding media-left designerDetail">
+            <div class="designerContent">
+                <h2><?php echo get_sub_field('name');?></h2>
+                <?php echo get_sub_field('description');?>
+                           
+            </div>
+        </div>
+
+        <div class="media-body nopadding designersImg">
+            <div class="col-md-12 nopadding">
+               
+                <img src="<?php echo $images['url']; ?>" alt="<?php echo $images['alt']; ?>" />
+            </div>
+        </div>
+    </div>
+    <?php } else{ ?>
+   <?php $images = get_sub_field('image'); ?>
+    <div class="container-fluid media designers nopadding" id="<?php echo $images['title'] ?>" style="background: url(<?php echo get_sub_field('bg_image');?>);">
+        <div class="media-left designersImg nopadding">
+            <div class="col-md-12 nopadding">
+                <img src="<?php echo $images['url']; ?>" alt="<?php echo $images['alt']; ?>" />
+            </div>
+        </div>
+
+        <div class="nopadding media-body designerDetail">
+            <div class="designerContent">
+                <h2><?php echo get_sub_field('name');?></h2>
+                <?php echo get_sub_field('description');?>
+            </div>
+        </div>                
+    </div>
+
+<?php } endwhile; endif; ?> 
+    
+
+
+
+
+
+</div>
+
+<?php get_footer(); ?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($(".designersImg").parent().width()>1024) {
+            $(".designersImg img").width($(".designersImg").parent().width() / 2);
+        }
+    });
+</script>
+
+
+

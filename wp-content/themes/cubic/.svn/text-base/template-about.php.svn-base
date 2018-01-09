@@ -1,0 +1,87 @@
+<?php
+
+/* 
+ Template Name: About
+ */
+
+get_header(); ?>
+
+
+
+<div class="homePage onlyAbout">
+    <div class="container-fluid sliderSection nopadding">
+        <div class="sliderContent">
+            <?php $image = get_field('banner_image'); ?>
+            <img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt']; ?>" class="img-responsive" />       
+        </div>        
+    </div>
+
+    <div class="retailerZone">
+        <ul>
+            <?php if(have_rows('retailer_info','options')): while(have_rows('retailer_info','options')): the_row(); ?>
+                <li><a href="<?php echo get_sub_field('link','options'); ?>"><img src="<?php echo get_sub_field('image','options'); ?>" /> <span><?php echo get_sub_field('text','options'); ?></span></a></li>
+            <?php endwhile; endif; ?>    
+        </ul>
+    </div>
+
+    <div class="container-fluid margin40pxTB">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2><?php the_title(); ?></h2>                    
+                </div>
+            </div>
+
+            <div class="row aboutusId">
+
+                <?php  if( have_rows('about_details') ): while( have_rows('about_details') ): the_row(); ?>
+                    <div class="col-sm-4 text-center">
+                        <h4><a href="#<?php echo strtolower(get_sub_field('title')); ?>"><?php echo get_sub_field('title'); ?></a></h4>  
+                    </div>
+               <?php endwhile; endif; ?> 
+                
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <?php  if( have_rows('about_details') ): while( have_rows('about_details') ): the_row(); ?>
+        <?php $image = get_sub_field('image'); if($image): ?>
+            <div class="container-fluid margin136pxTB" id="<?php echo strtolower(get_sub_field('title')); ?>">
+                <div class="container ">
+                    <div class="row media">
+                        <div class="col-sm-12">
+                        <div class="media-left">
+                            <img src="<?php echo $image['url']?>" alt="<?php echo $image['alt']?>" />
+                        </div>
+                        <div class="media-body text-right">
+                            <h3><?php echo get_sub_field('title'); ?></h3>
+                            <?php echo get_sub_field('description'); ?>
+                        </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>    
+    
+        <div class="container-fluid" id="<?php echo strtolower(get_sub_field('title')); ?>">
+            <div class="container">
+                <div class="row margin136pxTB">
+                    <div class="col-sm-10">
+                        <h3><?php echo get_sub_field('title'); ?></h3>
+                        <?php echo get_sub_field('description'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <?php endif; endwhile; endif; ?> 
+
+
+
+</div>
+
+<?php get_footer(); ?>
+
